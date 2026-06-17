@@ -12,6 +12,17 @@
       <th>Students Enrolled</th>
     </tr>
 
-    {% for itme in 
+    {% for itme in my_courses %}
+
+    <tr>
+      <td>{{item.course.name}}</td>
+      <td>{{item.teacher.name}}</td>
+      <td>{{item.course.time}}</td>
+      <td>{{item.count}}/{{item.course.capacity}}</td>
+    </tr>
+
+    {% endfor %}
     
   </table>
+
+{% endblock %}
