@@ -1,1 +1,37 @@
+{ % extends "base.html" }
 
+{ % block content % }
+  <h2>Add Courses</h2>
+  <p><a href="{{url_for('student_dashboard')}}">&laquo; Back to your Courses</a></p> 
+
+<table>
+  <tr>
+    <th>Course Name</th>
+    <th>Teacher</th>
+    <th>Time</th>
+    <th>Students Enrolled</th>
+    <th></th>
+  </tr>
+
+{ % for item in course_list % }
+
+  <tr>
+    <td>{{ item.course.name }}</td>
+    <td>{{ item.teacher.name }}</td>
+    <td>{{ item.course.time }}</td>
+    <td>{{ item.count }}/{{ item.course.capacity }}</td>
+
+    { % if item.enrolled % }
+      Enrolled
+    { % elif item.count >= item.course.capacity % }
+      Full
+    { % else % }
+      <form action="{{ url_for('enroll', course_id=item.course.id }}" method="POST">
+        <button type="submit" class="btn">Sign up</button>
+      </form>
+    { % endif % }
+    </td>
+  </tr>
+  { % endfor % }
+</table>
+{ % endblock % }
