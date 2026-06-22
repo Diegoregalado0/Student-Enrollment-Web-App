@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Your Courses</h2>
+
+<table>
+    <tr>
+        <th>Course Name</th>
+        <th>Time</th>
+        <th>Students Enrolled</th>
+    </tr>
+
+    {% for item in course_list %}
+    <tr>
+        <td>
+            <a href="{{ url_for('teacher_course', course_id=item.course.id) }}">
+                {{ item.course.name }}
+            </a>
+        </td>
+        <td>{{ item.course.time }}</td>
+        <td>{{ item.count }}/{{ item.course.capacity }}</td>
+    </tr>
+    {% endfor %}
+
+</table>
+{% endblock %}
