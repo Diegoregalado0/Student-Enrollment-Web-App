@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for, flash
+from flask import Flask, render_template, request, redirect, url_for, flash, abort
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager, UserMixin, login_user, logout_user, login_required, current_user
 from werkzeug.security import check_password_hash
@@ -81,6 +81,8 @@ def logout():
 @app.route('/student')
 @login_required
 def student_dashboard():
+    if current_user.role != 'student':
+        abort(403)
     enrollments = Enrollment.query.filter_by(student_id=current_user.id).all()
     my_courses = []
     for e in enrollments:
@@ -94,6 +96,8 @@ def student_dashboard():
 @app.route('/student/courses')
 @login_required
 def all_courses():
+    if current_user.role != 'student':
+        abort(403)
     courses = Course.query.all()
     enrolled_ids = []
     for e in Enrollment.query.filter_by(student_id=current_user.id).all():
@@ -109,6 +113,8 @@ def all_courses():
 @app.route('/student/enroll/<int:course_id>', methods=['POST'])
 @login_required
 def enroll(course_id):
+    if current_user.role != 'student':
+        abort(403)
     course = Course.query.get(course_id)
     count = Enrollment.query.filter_by(course_id=course_id).count()
     already = Enrollment.query.filter_by(student_id=current_user.id, course_id=course_id).first()
@@ -127,6 +133,8 @@ def enroll(course_id):
 @app.route('/teacher')
 @login_required
 def teacher_dashboard():
+    if current_user.role != 'teacher':
+        abort(403)
     courses = Course.query.filter_by(teacher_id=current_user.id).all()
     course_list = []
     for course in courses:
@@ -138,6 +146,8 @@ def teacher_dashboard():
 @app.route('/teacher/course/<int:course_id>')
 @login_required
 def teacher_course(course_id):
+    if current_user.role != 'teacher':
+        abort(403)
     course = Course.query.get(course_id)
     enrollments = Enrollment.query.filter_by(course_id=course_id).all()
     students = []
@@ -150,6 +160,8 @@ def teacher_course(course_id):
 @app.route('/teacher/grade/<int:enrollment_id>', methods=['POST'])
 @login_required
 def edit_grade(enrollment_id):
+    if current_user.role != 'teacher':
+        abort(403)
     enrollment = Enrollment.query.get(enrollment_id)
     enrollment.grade = int(request.form['grade'])
     db.session.commit()
