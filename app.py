@@ -2,6 +2,8 @@ from flask import Flask, render_template, request, redirect, url_for, flash
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager, UserMixin, login_user, logout_user, login_required, current_user
 from werkzeug.security import check_password_hash
+from flask_admin import Admin
+from flask_admin.contrib.sqla import ModelView
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'secret123'
@@ -35,6 +37,12 @@ class Enrollment(db.Model):
     grade = db.Column(db.Integer)
 
 
+admin = Admin(app, name='UC Merced Admin')
+admin.add_view(ModelView(User, db.session))
+admin.add_view(ModelView(Course, db.session))
+admin.add_view(ModelView(Enrollment, db.session))
+
+
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(int(user_id))
@@ -57,6 +65,8 @@ def login():
                 return redirect(url_for('student_dashboard'))
             elif user.role == 'teacher':
                 return redirect(url_for('teacher_dashboard'))
+            else:
+                return redirect('/admin')
         flash('Invalid username or password')
     return render_template('login.html')
 
