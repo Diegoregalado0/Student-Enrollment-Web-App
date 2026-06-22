@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>{{ course.name }}</h2>
+
+<table>
+    <tr>
+        <th>Student Name</th>
+        <th>Grade</th>
+        <th>Update</th>
+    </tr>
+
+    {% for s in students %}
+    <tr>
+        <td>{{ s.student.name }}</td>
+
+        <td>
+            <form method="POST"
+                  action="{{ url_for('edit_grade', enrollment_id=s.enrollment.id) }}">
+
+                <input type="number"
+                       name="grade"
+                       value="{{ s.enrollment.grade }}"
+                       min="0"
+                       max="100">
+
+        </td>
+
+        <td>
+                <button type="submit">Save</button>
+            </form>
+        </td>
+    </tr>
+    {% endfor %}
+
+</table>
+
+<a href="{{ url_for('teacher_dashboard') }}">Back to Courses</a>
+
+{% endblock %}
