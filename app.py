@@ -37,7 +37,7 @@ class Enrollment(db.Model):
     grade = db.Column(db.Integer)
 
 
-admin = Admin(app, name='UC Merced Admin')
+admin = Admin(app, name='UC Merced Admin', base_template='admin_base.html')
 admin.add_view(ModelView(User, db.session))
 admin.add_view(ModelView(Course, db.session))
 admin.add_view(ModelView(Enrollment, db.session))
@@ -89,7 +89,7 @@ def student_dashboard():
         course = Course.query.get(e.course_id)
         teacher = User.query.get(course.teacher_id)
         count = Enrollment.query.filter_by(course_id=course.id).count()
-        my_courses.append({'course': course, 'teacher': teacher, 'count': count})
+        my_courses.append({'course': course, 'teacher': teacher, 'count': count, 'grade': e.grade})
     return render_template('student_dashboard.html', my_courses=my_courses)
 
 

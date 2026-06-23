@@ -6,6 +6,7 @@
 <table>
     <tr>
         <th>Course Name</th>
+        <th>Teacher</th>
         <th>Time</th>
         <th>Students Enrolled</th>
     </tr>
@@ -17,6 +18,7 @@
                 {{ item.course.name }}
             </a>
         </td>
+        <td>{{ current_user.name }}</td>
         <td>{{ item.course.time }}</td>
         <td>{{ item.count }}/{{ item.course.capacity }}</td>
     </tr>
